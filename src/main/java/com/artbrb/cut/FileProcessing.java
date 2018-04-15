@@ -1,4 +1,4 @@
-package com.cut;
+package com.artbrb.cut;
 
 import java.io.File;
 import java.io.FileWriter;

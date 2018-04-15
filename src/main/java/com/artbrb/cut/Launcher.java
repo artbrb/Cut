@@ -1,4 +1,4 @@
-package com.cut;
+package com.artbrb.cut;
 
 import java.io.*;
 import java.util.Scanner;
@@ -48,7 +48,7 @@ public class Launcher {
 
         int[] flagNK = FileProcessing.parseRange(range);
 
-        if (inputFile == "") {
+        if (inputFile.equals("")) {
             Scanner text = new Scanner(System.in);
             String newString = text.nextLine();
             String string = "";
@@ -66,7 +66,7 @@ public class Launcher {
             }
         }
 
-        if (outputFile == "") {
+        if (outputFile.equals("")) {
             System.out.println(newText);
         } else {
             try {
