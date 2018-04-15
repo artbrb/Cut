@@ -12,6 +12,7 @@ public class Launcher {
 
     private void launch(String[] args) {
 
+        StringBuilder newText = new StringBuilder("");
         boolean flagC = false;
         boolean flagW = false;
         String inputFile = "";
@@ -39,24 +40,44 @@ public class Launcher {
             } else {
                 inputFile = args[s];
             }
+        }
 
-            if (flagC == flagW) {
-                System.err.println("Флаги -c и -w ен могут быть заданы одновременно");
-            } else {
-                if (inputFile != "") {
-                    try {
-                        InputStream in = new FileInputStream(inputFile);
-                        BufferedReader read = new BufferedReader(new InputStreamReader(in));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
+        if (flagC == flagW) {
+            System.err.println("Флаги -c и -w не могут быть заданы одновременно");
+        }
+
+        int[] flagNK = FileProcessing.parseRange(range);
+
+        if (inputFile == "") {
+            Scanner text = new Scanner(System.in);
+            String newString = text.nextLine();
+            String string = "";
+
+            while ((string = text.nextLine()).length() != 0) {
+                newText.append(FileProcessing.workWithStringOfFile(flagNK, flagC, flagW, newString));
+                newText.append("\n");
             }
+        } else {
+            Scanner scanner = new Scanner(inputFile);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                newText.append(FileProcessing.workWithStringOfFile(flagNK, flagC, flagW, line));
+                newText.append("\n");
+            }
+        }
 
-
+        if (outputFile == "") {
+            System.out.println(newText);
+        } else {
+            try {
+                FileProcessing.writeInNewFile(new File(outputFile), newText.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
+
 
 
 
