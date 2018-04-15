@@ -5,14 +5,14 @@ import java.util.Scanner;
 
 public class Launcher {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         new Launcher().launch(args);
     }
 
-    private void launch(String[] args) {
+    private void launch(String[] args) throws IOException {
 
-        StringBuilder newText = new StringBuilder("");
+        StringBuilder result = new StringBuilder("");
         boolean flagC = false;
         boolean flagW = false;
         String inputFile = "";
@@ -28,14 +28,11 @@ public class Launcher {
 
             if (cTest) {
                 flagC = true;
-            }
-            if (wTest) {
+            } else if (wTest) {
                 flagW = true;
-            }
-            if (oTest) {
+            } else if (oTest) {
                 outputFile = args[s + 1];
-            }
-            if (!oTest && !args[s - 1].equals("-o") && !cTest && !wTest && args[s].contains("-")) {
+            } else if (!args[s - 1].equals("-o") && args[s].contains("-")) {
                 range = args[s];
             } else {
                 inputFile = args[s];
@@ -46,33 +43,44 @@ public class Launcher {
             System.err.println("Флаги -c и -w не могут быть заданы одновременно");
         }
 
-        int[] flagNK = FileProcessing.parseRange(range);
+        String[] string = range.split("-");
+        int flagN = string[0].isEmpty() ? 0 : Integer.parseInt(string[0]);
+        int flagK = string[1].isEmpty() ? 0 : Integer.parseInt(string[1]);
+
 
         if (inputFile.equals("")) {
-            Scanner text = new Scanner(System.in);
-            String newString = text.nextLine();
-            String string = "";
+            System.out.println("Введите текст");
+            Scanner scanner = new Scanner(System.in);
 
-            while ((string = text.nextLine()).length() != 0) {
-                newText.append(FileProcessing.workWithStringOfFile(flagNK, flagC, flagW, newString));
-                newText.append("\n");
+            String currentLine;
+
+            while (true) {
+                currentLine = scanner.nextLine();
+                System.out.println("Строчка прочитана");
+                if (currentLine.length() == 0) {
+                    break;
+                }
+
+                result.append(FileProcessing.workWithStringOfFile(flagN, flagK, flagC, flagW, currentLine));
+                result.append("\n");
             }
         } else {
             Scanner scanner = new Scanner(inputFile);
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                newText.append(FileProcessing.workWithStringOfFile(flagNK, flagC, flagW, line));
-                newText.append("\n");
+                String currentLine = scanner.nextLine();
+                result.append(FileProcessing.workWithStringOfFile(flagN, flagK, flagC, flagW, currentLine));
+                result.append("\n");
             }
         }
 
         if (outputFile.equals("")) {
-            System.out.println(newText);
+            System.out.println(result.toString());
         } else {
             try {
-                FileProcessing.writeInNewFile(new File(outputFile), newText.toString());
+                FileProcessing.writeInNewFile(new File(outputFile), result.toString());
             } catch (IOException e) {
                 e.printStackTrace();
+                throw e;
             }
         }
     }
