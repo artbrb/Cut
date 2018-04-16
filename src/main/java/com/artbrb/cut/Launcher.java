@@ -75,14 +75,13 @@ public class Launcher {
 
         if (outputFile.equals("")) {
             System.out.println(result.toString());
-        } else {
-            try {
+        } else try {
                 FileProcessing.writeInNewFile(new File(outputFile), result.toString());
             } catch (IOException e) {
                 e.printStackTrace();
                 throw e;
             }
-        }
+
     }
 }
 
