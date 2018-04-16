@@ -13,18 +13,18 @@ public class Launcher {
     private void launch(String[] args) throws IOException {
 
         StringBuilder result = new StringBuilder("");
+        int flagN;
+        int flagK;
         boolean flagC = false;
         boolean flagW = false;
         String inputFile = "";
         String outputFile = "";
-        String range = "";
+        String flagsNAndK = "";
 
         for (int s = 1; s < args.length; s++) {
-
             boolean cTest = args[s].equals("-c");
             boolean wTest = args[s].equals("-w");
-            boolean oTest = args[s].equals("-0");
-
+            boolean oTest = args[s].equals("-o");
 
             if (cTest) {
                 flagC = true;
@@ -33,8 +33,8 @@ public class Launcher {
             } else if (oTest) {
                 outputFile = args[s + 1];
             } else if (!args[s - 1].equals("-o") && args[s].contains("-")) {
-                range = args[s];
-            } else {
+                flagsNAndK = args[s];
+            } else if (!args[s - 1].equals("-o")) {
                 inputFile = args[s];
             }
         }
@@ -43,20 +43,20 @@ public class Launcher {
             System.err.println("Флаги -c и -w не могут быть заданы одновременно");
         }
 
-        String[] string = range.split("-");
-        int flagN = string[0].isEmpty() ? 0 : Integer.parseInt(string[0]);
-        int flagK = string[1].isEmpty() ? 0 : Integer.parseInt(string[1]);
-
+        String[] range = flagsNAndK.split("-");
+        flagN = range[0].isEmpty() ? 0 : Integer.parseInt(range[0]);
+        if (range.length == 1 && flagN != 0) {
+            flagK = 0;
+        } else {
+            flagK = Integer.parseInt(range[1]);
+        }
 
         if (inputFile.equals("")) {
             System.out.println("Введите текст");
             Scanner scanner = new Scanner(System.in);
-
             String currentLine;
-
             while (true) {
                 currentLine = scanner.nextLine();
-                System.out.println("Строчка прочитана");
                 if (currentLine.length() == 0) {
                     break;
                 }

@@ -7,17 +7,17 @@ import java.io.IOException;
 public class FileProcessing {
 
     public static String writingFlagC(int n, int k, String string) {
-
+        int lastSymbol = Math.min(string.length(), k);
         if (n == 0) {
             if (string.length() < k) {
                 return string;
             } else {
-                return string.substring(0, k);
+                return string.substring(0, lastSymbol);
             }
         } else if (k == 0) {
-            return string.substring(n - 1, string.length() - 1);
+            return string.substring(n - 1, string.length());
         } else {
-            return string.substring(n, k);
+            return string.substring(n - 1, lastSymbol);
         }
     }
 
@@ -27,12 +27,12 @@ public class FileProcessing {
         String[] words = inputString.split(" ");
 
         if (n == 0) {
-            for (int i = 0; i < words.length && i < k - 1; i++) {
+            for (int i = 0; i < words.length && i < k; i++) {
                 builder.append(words[i]);
                 builder.append(" ");
             }
         } else if (k == 0) {
-            for (int i = n; i < words.length; i++) {
+            for (int i = n - 1; i < words.length; i++) {
                 builder.append(words[i]);
                 builder.append(" ");
             }
@@ -45,22 +45,6 @@ public class FileProcessing {
         return builder.toString().trim();
     }
 
-//    public static int[] parseRange(String range) {
-////        String[] string = range.split("-");
-////        return string;
-////        if (range.length() == 3 && range.charAt(1) == '-') {
-////            return new int[]{range.charAt(0), range.charAt(2)};
-////        }
-////        if (range.length() == 2) {
-////            if (range.charAt(0) == '-') {
-////                return new int[]{0, range.charAt(1)};
-////            } else
-////                return new int[]{range.charAt(1), 0};
-////        } else {
-////            throw new IllegalArgumentException();
-////        }
-//    }
-
     public static void writeInNewFile(File newFile, String string) throws IOException {
             FileWriter write = new FileWriter(newFile);
             write.append(string);
@@ -68,8 +52,7 @@ public class FileProcessing {
             write.close();
     }
 
-    public static String workWithStringOfFile(int n, int k, boolean flagC, boolean flagW, String string) {
-
+    public  static String workWithStringOfFile(int n, int k, boolean flagC, boolean flagW, String string) {
 
         if (flagC) {
             string = writingFlagC(n, k, string);
